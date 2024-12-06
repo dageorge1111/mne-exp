@@ -105,4 +105,20 @@ ax.quiver3D(
     linewidth=1,
     linestyle="dashed",
 )
+
+# SSP - signal space projection
+# Projectors
+sample_data_folder = mne.datasets.sample.data_path()
+sample_data_raw_file = os.path.join(
+    sample_data_folder, "MEG", "sample", "sample_audvis_raw.fif"
+)
+raw = mne.io.read_raw_fif(sample_data_raw_file)
+raw.crop(tmax=60).load_data() 
+mags = raw.copy().crop(tmax=2).pick(picks="mag")
+for proj in (False, True):
+    with mne.viz.use_browser_backend("matplotlib"):
+        fig = mags.plot(butterfly=True, proj=proj)
+    fig.subplots_adjust(top=0.9)
+    fig.suptitle(f"proj={proj}", size="xx-large", weight="bold")
+
 plt.show()
